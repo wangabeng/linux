@@ -74,3 +74,8 @@ If above article doesn't help to resolve this issue please create a bug on https
 
 failure: repodata/repomd.xml from nginx: [Errno 256] No more mirrors to try.
 http://nginx.org/packages/centos/7/i386/repodata/repomd.xml: [Errno 14] HTTP Err                                             or 404 - Not Found
+
+
+解决参照：
+https://www.unix.com/linux/174307-errno-256-no-more-mirrors-try.html 
+http://www.178linux.com/27073
