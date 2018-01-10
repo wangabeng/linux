@@ -79,3 +79,9 @@ http://nginx.org/packages/centos/7/i386/repodata/repomd.xml: [Errno 14] HTTP Err
 解决参照：
 https://www.unix.com/linux/174307-errno-256-no-more-mirrors-try.html 
 http://www.178linux.com/27073
+http://www.voidcn.com/article/p-ofemgywu-kn.html
+
+http://www.voidcn.com/article/p-rlzldoay-uw.html
+
+解决方法，yum -y install ftp，即可
+http://www.voidcn.com/article/p-oxxtlnel-rs.html
