@@ -75,13 +75,10 @@ If above article doesn't help to resolve this issue please create a bug on https
 failure: repodata/repomd.xml from nginx: [Errno 256] No more mirrors to try.
 http://nginx.org/packages/centos/7/i386/repodata/repomd.xml: [Errno 14] HTTP Err                                             or 404 - Not Found
 
-
-解决参照：
-https://www.unix.com/linux/174307-errno-256-no-more-mirrors-try.html 
-http://www.178linux.com/27073
-http://www.voidcn.com/article/p-ofemgywu-kn.html
-
-http://www.voidcn.com/article/p-rlzldoay-uw.html
-
-解决方法，yum -y install ftp，即可
-http://www.voidcn.com/article/p-oxxtlnel-rs.html
+折腾了一天，把镜像源删除，用系统自带的yum就可以正确执行，但是无法安装nginx。
+通过比对cd /etc/yum.repos.d的CentOS-Base.repo的配置
+baseurl=http://mirrors.163.com/centos/$releasever/os/$basearch/
+和错误信息：
+http://nginx.org/packages/centos/7/i386/repodata/repomd.xml
+包括163的镜像源，发现对centos7都不支持32位的系统。
+终于明白了 我装的centos系统是7版本i386（即32位系统）的，但是163镜像 或其他版本的镜像 都不支持32位的系统的，只支持X86-64即64位系统的，这就导致一旦安装了yum镜像 就会报以上的错误。解决办法: 我的电脑是32位的 装的是32位的操作系统。既然centos7以上的版本 各大镜像网站都不支持32位的镜像源，我只能选择安装centos6.9及以下的版本， 他们支持6.9及以下的镜像
