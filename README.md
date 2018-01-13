@@ -82,3 +82,67 @@ baseurl=http://mirrors.163.com/centos/$releasever/os/$basearch/
 http://nginx.org/packages/centos/7/i386/repodata/repomd.xml
 包括163的镜像源，发现对centos7都不支持32位的系统。
 终于明白了 我装的centos系统是7版本i386（即32位系统）的，但是163镜像 或其他版本的镜像 都不支持32位的系统的，只支持X86-64即64位系统的，这就导致一旦安装了yum镜像 就会报以上的错误。解决办法: 我的电脑是32位的 装的是32位的操作系统。既然centos7以上的版本 各大镜像网站都不支持32位的镜像源，我只能选择安装centos6.9及以下的版本， 他们支持6.9及以下的镜像
+
+
+#  关于修改用户权限操作:
+https://www.cnblogs.com/fefjay/p/6047820.html
+
+#  关于修改nginx根目录地址打开后出现403错误的问题:
+	参考：http://blog.csdn.net/reblue520/article/details/52294555
+	1 新的目录为 /data/www/index.html
+	路径的任何一级目录或index.html文件没有w权限，就无法访问。解决办法，修改不具有w权限的文件或文件夹的权限。
+	2 我已经修改了权限，仍然报错403错误。SELinux设置为开启状态（enabled）的原因。解决办法： 一 临时关闭SELinux（暂时理解为一种安全机制）
+	setenforce 0 // 临时关闭
+	二 永久关闭：修改配置文件 /etc/ selinux/config，将SELINUX=enforcing改为SELINUX=disabled
+	vi /etc/selinux/config
+
+# 配置nginx反向代理失败 不能定向 原因待研究
+配置文件 /etc/nginx/conf.d/imooc.def
+
+代码如下：
+
+upstream imooc_hosts {
+    server 118.89.106.129:80;
+}
+
+server {
+    listen       80;
+    server_name  www.imooc.test www.wangabeng.test;
+    root   /data/www;
+    index  index.html index.htm;
+
+    location / {
+        # rewrite ^(.*)\.htmp$  /index.html;
+        proxy_set_header Host www.54php.cn;
+        proxy_pass  http://118.89.106.129:80;
+    }
+}
+原因是标点符号漏写了。
+
+# 每次重新启动电脑 无法正常打开 原因是标点符号漏写了
+
+# 设置负载均衡：主机1是本地服务器主机 主机2是百度主机 百度主机需要设置请求头hsot 为www.baidu.com. 注意：如果修改配置文件后不生效 restart nginx试试
+这里应该怎样写 proxy_pass http://imooc_hosts; 
+而不是 proxy_pass imooc_hosts;
+
+upstream imooc_hosts {
+    server 192.168.159.133:80;
+    server 61.135.169.125:80; 
+}
+
+server {
+    listen       80;
+    server_name  www.imooc.test www.wangabeng.test;
+    root   /data/www;
+    index  index.html index.htm;
+
+    location / {
+        # rewrite ^(.*)\.htmp$  /index.html;
+        proxy_pass http://imooc_hosts;
+        proxy_set_header Host www.baidu.com;
+    }
+}
+
+
+# nginx php mysql在centos的运行环境搭建
+参考： http://blog.csdn.net/lanxe/article/details/7399300
