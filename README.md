@@ -146,3 +146,9 @@ server {
 
 # nginx php mysql在centos的运行环境搭建
 参考： http://blog.csdn.net/lanxe/article/details/7399300
+
+# 阿里云远程登录相关配置
+远程登录分配PD：230884
+login pd： Name bir
+百度站长：Name bir
+
