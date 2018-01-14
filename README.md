@@ -151,4 +151,5 @@ server {
 远程登录分配PD：230884
 login pd： Name bir
 百度站长：Name bir
+公网IP： 47.104.182.26
 
