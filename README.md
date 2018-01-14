@@ -153,3 +153,56 @@ login pd： Name bir
 百度站长：Name bir
 公网IP： 47.104.182.26
 
+# 阿里云服务器根目录结构
+	[root@izm5e9aw3dxj3q07rx3w7fz ~]# ls / -al
+	total 68
+	dr-xr-xr-x. 18 root root  4096 Jan 14 13:46 .
+	dr-xr-xr-x. 18 root root  4096 Jan 14 13:46 ..
+	-rw-r--r--   1 root root     0 Oct 15 15:22 .autorelabel
+	lrwxrwxrwx.  1 root root     7 Oct 15 23:19 bin -> usr/bin
+	dr-xr-xr-x.  5 root root  4096 Oct 15 23:24 boot
+	drwxr-xr-x  20 root root  3040 Jan 14 13:46 dev
+	drwxr-xr-x. 80 root root  4096 Jan 14 13:46 etc
+	drwxr-xr-x.  2 root root  4096 Nov  5  2016 home
+	lrwxrwxrwx.  1 root root     7 Oct 15 23:19 lib -> usr/lib
+	lrwxrwxrwx.  1 root root     9 Oct 15 23:19 lib64 -> usr/lib64
+	drwx------.  2 root root 16384 Oct 15 23:18 lost+found
+	drwxr-xr-x.  2 root root  4096 Nov  5  2016 media
+	drwxr-xr-x.  2 root root  4096 Nov  5  2016 mnt
+	drwxr-xr-x.  2 root root  4096 Nov  5  2016 opt
+	dr-xr-xr-x  73 root root     0 Jan 14 13:46 proc
+	dr-xr-x---.  5 root root  4096 Jan 14 12:58 root
+	drwxr-xr-x  21 root root   580 Jan 14 13:46 run
+	lrwxrwxrwx.  1 root root     8 Oct 15 23:19 sbin -> usr/sbin
+	drwxr-xr-x.  2 root root  4096 Nov  5  2016 srv
+	dr-xr-xr-x  13 root root     0 Jan 14  2018 sys
+	drwxrwxrwt.  8 root root  4096 Jan 14 15:10 tmp
+	drwxr-xr-x. 13 root root  4096 Oct 15 23:19 usr
+	drwxr-xr-x. 19 root root  4096 Oct 15 15:22 var
+
+# putty设置ssh登录
+	第一步： run puttygen生成公钥代码和私钥文件。
+	第二步： 保存私钥文件到本地，打开putty客户端（非命令行），载入私钥文件。
+	第三步： 拷贝公钥代码，putty登录到远程服务器， 打开 ~/.ssh/authorized_keys，把代码复制到此文件中即可。
+# centos新建用户 并设置密码
+	进入 /home目录
+	useradd newusername //新增用户名 userdel username 删除帐户名
+	passwd newusername // 设置密码
+	
+# 提权操作
+	1 在abeng下操作vim 提示没有权限
+	2 需要在root账号下授权
+	进入root账户
+	visudo // 找到/wheel 
+	%wheel  ALL=(ALL)       ALL // 在下面添加一行 即可在abeng下操作 sudo vim filename
+	%wheel  abeng=(ALL)       ALL
+# 防火墙安装 等命令
+	yum install firewalld //安装
+	service firewalld start
+	service firewalld status
+	service firewalld stop/disable 关闭/禁用 防火墙
+	yum list |grep firewall  // 检查防火墙是否安装好了
+	ps -ef |grep firewall //检查服务是否是自动状态
+#
+#
+#
