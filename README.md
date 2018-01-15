@@ -13,14 +13,11 @@ sudo rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-cento
 
 在你的CentOS 7 服务器中使用yum命令从Nginx源服务器中获取来安装Nginx：
 
-sudo yum install -y nginx
+sudo yum install -y nginx // 备注 阿里云服务器可以直接安装nginx 无需下载
 
 Nginx将完成安装在你的CentOS 7 服务器中。
 
 附：nginx 官方给不同系统准备了很多包，可到这个地址依次查找 http://nginx.org/packages/
-
-
-
 
 //
 始终安装不成功 不仅nginx安装不成功 其他的任何软件都无法安装成功了 vim也不无法安装了 报错信息如下
@@ -148,10 +145,11 @@ server {
 参考： http://blog.csdn.net/lanxe/article/details/7399300
 
 # 阿里云远程登录相关配置
-远程登录分配PD：230884
-login pd： Name bir
-百度站长：Name bir
-公网IP： 47.104.182.26
+	远程登录分配PD：230884
+	login pd： Name bir
+	百度站长：Name bir
+	公网IP： 47.104.182.26
+	内网：172.31.241.139
 
 # 阿里云服务器根目录结构
 	[root@izm5e9aw3dxj3q07rx3w7fz ~]# ls / -al
@@ -196,13 +194,86 @@ login pd： Name bir
 	visudo // 找到/wheel 
 	%wheel  ALL=(ALL)       ALL // 在下面添加一行 即可在abeng下操作 sudo vim filename
 	%wheel  abeng=(ALL)       ALL
-# 防火墙安装 等命令
+# 防火墙安装 等命令 参照 https://www.cnblogs.com/lambertwe/p/7352552.html
 	yum install firewalld //安装
-	service firewalld start
-	service firewalld status
+	service firewalld start // 开启
+	service firewalld status // 查看防火墙状态
 	service firewalld stop/disable 关闭/禁用 防火墙
 	yum list |grep firewall  // 检查防火墙是否安装好了
-	ps -ef |grep firewall //检查服务是否是自动状态
+	
+	放行一个端口（即开启一个端口）
+	添加
+	firewall-cmd --zone=public --add-port=3000/tcp --permanent    （--permanent永久生效，没有此参数重启后失效）
+	重新载入
+	firewall-cmd --reload
+	查看
+	firewall-cmd --zone= public --query-port=80/tcp
+	删除
+	firewall-cmd --zone=public --remove-port=3000/tcp --permanent
+	列出所有的开放端口
+	firewall-cmd --list-all
+
+# centos安装nvm及node 参照 https://www.jianshu.com/p/f97b436da0ba
+	一 下面使用nvm安装nodejs 然后提示重新启动shell工具
+	wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.30.1/install.sh | bash
+	二 通过简单的命令来安装nodejs https://nodejs.org/zh-cn/
+	nvm install 8.9.4  // 安装node的稳定版本 参照官方推荐
+	三 nvm启用node
+	nvm use node // 或 nvm use v8.9.4
+
+# 改变node的npm镜像源为cnpm
+	npm install -g cnpm --registry=https://registry.npm.taobao.org
+
+# 在阿里云服务器的端口有两道门，外层是阿里云服务器，内层是防火墙。
+	如果想开放3000端口，须设置两道门同时开放3000端口才可。
+
+# 在阿里云上遇到一个问题 开启了一个node服务后 shell关闭 node仍然持续服务。如何办？
+	ps -ax | grep node //找出所有node应用
+	kill :pid // 例如 kill 14754  杀死特定pid的进程
+	pkill node // 杀死所有的node进程
+# pm2 命令大全
+	http://blog.csdn.net/chengxuyuanyonghu/article/details/74910875
+	pm2 list // 列表 PM2 启动的所有的应用程序
+	pm2 show [app-name] // 显示应用程序的所有信息
+	pm2 stop 0  // 停止 id为 0的指定应用程序
+	pm2 restart all   // 重启所有应用
+	pm2 delete all  // 关闭并删除所有应用
+	pm2 delete 0   // 删除指定应用 id 0
+	pm2 startup    // 创建开机自启动命令
+# 解决node在非root账户环境不可以设置80端口的问题 
+	解决方法 通过nginx反向代理
+	我的公网IP xx.xxx.x.xx
+	通过访问 xx.xxx.x.xx:80 代理到 xx.xxx.x.xx:3000
+
+	cd /etc/nginx/conf.d/目录  新建文件 wangabeng-cn-3000.conf
+
+	upstream imooc_hosts {
+	    server 47.104.182.26:3000;  // 这里改为本地地址 阿里云的本机地址 而不是我的机器的地址 127.0.0.1:3000
+	}
+
+	server {
+	    listen       80;
+	    server_name  47.104.182.26;
+
+	    location / {
+	        proxy_pass http://imooc_hosts;
+	        proxy_set_header Host $host;
+	        proxy_set_header X-Nginx-proxy true;
+	        proxy_set_header X-Real-IP $remote_addr;
+	        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	        proxy_redirect off;
+	    }
+	}
+
+#
+#
+#
+#
+#
+#
+#
+#
+#
 #
 #
 #
