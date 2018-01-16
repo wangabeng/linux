@@ -265,7 +265,8 @@ server {
 	    }
 	}
 
-#
+# Linux安装MongoDB
+	https://i.jakeyu.top/2016/10/21/CentOS%E5%AE%89%E8%A3%85mongodb%E6%95%B0%E6%8D%AE%E5%BA%93/
 #
 #
 #
