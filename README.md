@@ -265,9 +265,113 @@ server {
 	    }
 	}
 
-# Linux安装MongoDB
-	https://i.jakeyu.top/2016/10/21/CentOS%E5%AE%89%E8%A3%85mongodb%E6%95%B0%E6%8D%AE%E5%BA%93/
-#
+# Linux安装MongoDB 参照 https://www.cnblogs.com/brucetang/p/5965493.html
+	
+	第一步 下载
+	// 32位的下载
+	wget   http://downloads.mongodb.org/linux/mongodb-linux-i686-v3.2-latest.tgz?_ga=2.114898759.1713724367.1498550277-1089294971.1498550277
+	// 64位下载地址
+	wget http://downloads.mongodb.org/linux/mongodb-linux-x86_64-3.2.1.tgz
+	第二步 解压 改名
+	tar zxf mongodb-linux-x86_64-3.2.1.tgz
+	mv mongodb-linux-x86_64-3.2.1/ /usr/local/mongodb
+
+	第三步 创建数据文件和日志文件
+
+	mkdir -p /data/mongodb/
+	mkdir /data/mongodb/logs
+	touch /data/mongodb/logs/mongod.log
+	// 坑坑坑 无法启动 网上有人和我遇到类似的问题
+
+	data和logs应该放在安装目录下，就不会报错了，大坑，大坑。
+	所以 以上路径更改为
+	mkdir -p /usr/local/mongodb/data
+	mkdir /usr/local/mongodb/logs
+	touch /usr/local/mongodb/logs/mongod.log
+
+	第四步 在安装mongodb的用户下添加如下环境变量,以便直接使用mongodb bin目录下的命令
+	export PATH=$PATH:/usr/local/mongodb/bin/
+
+	备注：这样创建的只是临时的环境变量，shell窗口关闭后，此环境变量就消失了。永久创建方法如下：
+	通过修改.bashrc文件:
+	vim ~/.bashrc 
+	//在最后一行添上：
+	export PATH=/usr/local/mongodb/bin:$PATH
+	生效方法：（有以下两种）
+	1、关闭当前终端窗口，重新打开一个新终端窗口就能生效
+	2、输入“source ~/.bashrc”命令，立即生效
+	有效期限：永久有效
+	用户局限：仅对当前用户
+
+	第五步 启动mongodb
+
+	mongod --dbpath=/usr/local/mongodb/data --logpath=/usr/local/mongodb/logs/mongod.log --logappend  --port=27017
+
+	第六步 检查端口是否启动，端口为：27017
+	netstat -nlp | grep 27017
+	tcp        0      0 0.0.0.0:27017               0.0.0.0:*                   LISTEN      1897/mongod         
+	unix  2      [ ACC ]     STREAM     LISTENING     11098  1897/mongod         /tmp/mongodb-27017.sock
+	启动成功。
+
+	第七步 连接数据库
+	# mongo
+	> use test
+
+	第八步 设置mongodb自动启动（无权限）
+	将如下命令添加到 /etc/rc.local
+	mongod --dbpath=/usr/local/mongodb/data --logpath=/usr/local/mongodb/logs/mongod.log --logappend  --port=27017&
+
+	第九步 设置mongodb自动启动（有权限）
+	将如下命令添加到 /etc/rc.local
+
+	mongod --dbpath=/usr/local/mongodb/data --logpath=/usr/local/mongodb/logs/mongod.log --logappend  --port=27017& -auth
+
+
+	开机启动设置不成功 原因参考
+	https://www.cnblogs.com/koboshi/p/4036312.html
+
+	http://blog.csdn.net/u013940812/article/details/60961296
+
+
+# CentOS查看和修改PATH环境变量的方法
+	参考： http://blog.csdn.net/boolbo/article/details/52437760
+
+	查看PATH：echo $PATH
+	以添加mongodb server为列
+	修改方法一：
+	export PATH=/usr/local/mongodb/bin:$PATH
+	//配置完后可以通过echo $PATH查看配置结果。
+	生效方法：立即生效
+	有效期限：临时改变，只能在当前的终端窗口中有效，当前窗口关闭后就会恢复原有的path配置
+	用户局限：仅对当前用户
+	 
+	修改方法二：
+	通过修改.bashrc文件:
+	vim ~/.bashrc 
+	//在最后一行添上：
+	export PATH=/usr/local/mongodb/bin:$PATH
+	生效方法：（有以下两种）
+	1、关闭当前终端窗口，重新打开一个新终端窗口就能生效
+	2、输入“source ~/.bashrc”命令，立即生效
+	有效期限：永久有效
+	用户局限：仅对当前用户
+
+	修改方法三:
+	通过修改profile文件:
+	vim /etc/profile
+	/export PATH //找到设置PATH的行，添加
+	export PATH=/usr/local/mongodb/bin:$PATH
+	生效方法：系统重启
+	有效期限：永久有效
+	用户局限：对所有用户
+
+	修改方法四:
+	通过修改environment文件:
+	vim /etc/environment
+	在PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"中加入“:/usr/local/mongodb/bin”
+	生效方法：系统重启
+	有效期限：永久有效
+	用户局限：对所有用户	
 #
 #
 #
