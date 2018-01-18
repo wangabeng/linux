@@ -332,6 +332,75 @@ server {
 
 	http://blog.csdn.net/u013940812/article/details/60961296
 
+	按照mongodb游记作者的方法配置 仍然不成功。
+
+	作者提到解压的方法安装有很多缺陷。建议yum安装.
+
+# 用yum重新安装mongodb及配置安装启动
+	http://www.linuxidc.com/Linux/2016-12/137790.htm
+	参考 http://blog.csdn.net/zhuchuangang/article/details/51202752	
+	1、准备工作
+	运行yum命令查看MongoDB的包信息 
+	# yum info mongodb
+	（提示没有相关匹配的信息，） 说明你的centos系统中的yum源不包含MongoDB的相关资源，所以要在使用yum命令安装MongoDB前需要增加yum源，也就是在 /etc/yum.repos.d/目录中增加 *.repo yum源配置文件
+
+	2、vim /etc/yum.repos.d/mongodb.repo，输入下面的语句：
+	[mongodb]
+	name=MongoDB Repository
+	baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.4/x86_64/
+	gpgcheck=0
+	enabled=1
+
+	3、安装MongoDB的服务器端和客户端工具  
+	yum install mongodb
+
+	4、启动mongodb
+	若输入 mongod -help 出现很多帮助信息 就说明安装成功了。mongod前没有加路径，是因为yum安装mongodb会把它自动添加到环境变量中，而不需要手工添加。如果是通过解压包安装，就需要手工增加环境变量。
+
+	mongodb安装成功后配置文件：
+	/etc/mongod.conf
+
+	默认log文件
+	 /var/log/mongodb/mongod.log
+	默认dbpath
+	dbPath: /var/lib/mongo
+	默认端口号：
+	27017
+
+	如果这样启动
+	mongod
+	会出现如下错误提示:
+	2018-01-18T14:06:24.481+0800 I STORAGE  [initandlisten] exception in initAndListen: 29 Data directory /data/db not found., terminating
+	意思是/data/db没有找到 在系统中这个文件夹没有创建 (mongod 后面不加dbpath参数会自动找 /data/db 这个文件夹 即便修改了config文件的dbpath位置 还是要加参数 不加就默认找/data/db)所以报错，解决办法是创建这样一个文件夹然后用mongod 不指定dbpath路径
+
+	还可以指定路径启动(前提是创建了/mongodb/data这个文件夹)
+	mongod --dbpath=/mongodb/data
+	这个时候又有错误提示：
+	[initandlisten] exception in initAndListen: 20 Attempted to create a lock file on a read-only directory: /mongodb/data, terminating
+	大概是有个文件锁住了 directory: /mongodb/data
+	找到这个文件夹 有个文件mongod.lock 把它删除了
+	再执行
+	mongod --dbpath=/mongodb/data 发现还是不成功 原来是因为权限不够
+	sudo mongod --dbpath=/mongodb/data  
+	就成功了 提示 waiting for connections on port 27017
+	再开启一个终端 输入mongo 就进入数据库了 
+	>use test
+	>show dbs
+
+	也可以这样启动(配置文件里有 --fork为true 意思是守护进程 在内存中运行 但是在客户端却看不到 可以通过sudo pkill mongod把进程关掉) 
+	sudo mongod --config /etc/mongod.conf
+
+
+	5、设置开机启动mongodb
+	编辑此文件 sudo vim /etc/rc.local
+	在最后一行添加
+	mongod --config /etc/mongod.conf
+	（以mongod.conf此文件的配置来执行开机启动 mongod.conf里面配置了dbpath和logs路径 还有守护进程选项 可谓非常完美的 所以以此配置文件来启动mongodb是非常好的方法 如果需要更改设置 就直接更改mongod.conf文件即可）
+	
+
+
+
+
 
 # CentOS查看和修改PATH环境变量的方法
 	参考： http://blog.csdn.net/boolbo/article/details/52437760
@@ -372,6 +441,7 @@ server {
 	生效方法：系统重启
 	有效期限：永久有效
 	用户局限：对所有用户	
+
 #
 #
 #
