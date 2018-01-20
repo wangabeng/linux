@@ -397,10 +397,32 @@ server {
 	mongod --config /etc/mongod.conf
 	（以mongod.conf此文件的配置来执行开机启动 mongod.conf里面配置了dbpath和logs路径 还有守护进程选项 可谓非常完美的 所以以此配置文件来启动mongodb是非常好的方法 如果需要更改设置 就直接更改mongod.conf文件即可）
 	
+	6、mongodb自由开启和关闭
+	自由开启
+	// 守护进程登录
+	sudo mongod --dbpath=/mongodb/data --logpath=/mongodb/logs/mongod.log --logappend --port=27017 &
+	
+	// --auth开启用户权限认证模式登录
+	sudo mongod --dbpath=/mongodb/data --logpath=/mongodb/logs/mongod.log --logappend --port=27017 --auth &
+	&相当于fork 守护进程方式开启 必须同时加--logspath守护进程才会生效
+	或以下两种方式（这两种方式等价 推荐）
+	mongod --config /etc/mongod.conf
+	mongod -f /etc/mongod.conf
 
+	mongod --config /etc/mongod.conf  
 
+	sudo pkill mongodb // 杀死所有mongodb进程
 
+	使用kill杀死进程
 
+	ps aux | grep mongod // 查看所有的mongod进程 
+	kill -2 PID // 杀死特定pid的进程 -1是查看 -2和-15都会等mongodb处理完事情释放相应资源后再停止。 -9是马上停止进程 比较暴力，不要使用，否则很可能导致数据损坏.
+
+	7、mongodb启动相关问题
+	如果出现这样的提示
+	ERROR: child process failed, exited with error number 100
+
+	解决办法  删除/var/lib/mongo/下的   mongod.lock 然后重启
 
 # CentOS查看和修改PATH环境变量的方法
 	参考： http://blog.csdn.net/boolbo/article/details/52437760
@@ -442,6 +464,63 @@ server {
 	有效期限：永久有效
 	用户局限：对所有用户	
 
+# Mongodb专项学习(参考：https://www.jianshu.com/p/75ba25415218)
+	1 开启权限认证 增强安全性
+	安装好数据库后 开启数据库
+	然后连接数据库
+
+	第一步：默认auth未开启。登录数据库后 
+	mongo -port 27017
+	登录数据库后 进入admin数据库
+	>show dbs
+	// admin local
+	>user admin
+	>db.createUser({user:'imooc', pwd: 'imooc', roles: [{role: "userAdminAnyDatabase", db: "admin"}]})
+
+	//
+	Successfully added user: {
+	        "user" : "imooc",
+	        "roles" : [
+	                {
+	                        "role" : "userAdminAnydatabase",
+	                        "db" : "admin"
+	                },
+	                {
+	                        "role" : "read",
+	                        "db" : "test"
+	                }
+	        ]
+	}
+	第二步： 然后重新启动数据库 加上auth参数
+	sudo mongod --dbpath=/mongodb/data --logpath=/mongodb/logs/mongod.log --logappend --port=27017 --auth &  
+	此时 如果用默认账号登录 
+	mongo
+	> show dbs// 就会出错 说没有权限 
+	以账号密码方式登录
+	mongo -u imooc -p imooc --authenticationDatabase 'admin' // 这样登录很麻烦 也可以直接mongo登录 然后 use admin 
+	db.auth('imooc', 'imooc') //主账号登录
+	然后就可以操作数据库了
+
+	当然不能一直用主账号登录，要在主账号登录的环境下 创建特定数据库的管理员账号
+	use admin
+	db.auth('imooc', 'imooc') //主账号登录 如果加参数登录了 这里就不需要db.auth了
+
+	然后创建特定数据库的管理员
+	use test
+	db.createUser({user: "myTester", pwd: "xyz123", roles: [{role: "readWrite", db: "test"}, {role: "read", db: "reporting"}]})
+	使用普通用户账号登陆
+	mongo --port27017
+	use test
+	db.auth("myTester","xyz123")
+	向数据集中添加纪录
+	db.foo.insert({x:1, y:1})
+
+	修改密码：(需要管理员权限)
+	db.changeUserPassword('mytest','newpassword')
+	查看有哪些用户 (需要管理员权限)
+	show users
+	删除用户 (需要管理员权限)
+	db.dropUser('mytest')
 #
 #
 #
@@ -451,4 +530,6 @@ server {
 #
 #
 #
-#
+
+
+mongo -u 'imooc' -p 'imooc' --authenticationDatabase 'admin'
