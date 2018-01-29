@@ -624,6 +624,9 @@ server {
 
  第二步 本地仓库添加git源 git remote add origin git@github.com:wangabeng/aliyundata.git  此时 查看git源 git remote -v origin git@github.com:wangabeng/aliyundata.git (fetch) origin git@github.com:wangabeng/aliyundata.git (push)
 
+ git修改源镜像
+ git remote set-url origin newurl
+
  第三步 把本地代码提交到暂存区 工作区  git add . git commit -m 'add'
 
  第四步 合并当前分支到远程master分支 git fetch origin master  此时会报错 因为本地没有工作流记录 fatal: refusing to merge unrelated histories  所以要添加参数 --allow-unrelated-histories git fetch origin master --allow-unrelated-histories
