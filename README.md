@@ -268,6 +268,16 @@ server {
 	    }
 	}
 
+# 关于虚拟主机和虚拟服务器的区别：
+	参考网站：https://zhidao.baidu.com/question/518640025224832685.html
+	独立ip的有什么优势呢？ 非独立ip的虚拟主机： 1.共享ip主机不能用ip直接打开您的网站。 2.ip是共享的，一个服务器分很多虚拟主机，也就是说很多网站同用一个ip 3.如果收到黑客攻击，那么整个服务器上同ip的网站都受到影响 4.如果这个服务器上某些虚拟主机站点存放了违法信息，被网监查到了，那么就会封ip（现在网络查的都比较严格），那么您的站点也同时受到影响 5.搜索引擎收录，如果因为这个服务器上的某个站点因为作弊，或者违反了搜索引擎收录规则，或者有违法信息等，就有可能被搜索引擎降低权重，那么排名就会靠后了，同时就有可能影响整台服务器上的站点排名。 6.绑定域名有限制，虚拟主机绑定域名是有限制的，并且解析了域名还需要在虚拟主机管理那里进行域名绑定，这样才能访问网站。 独立ip的虚拟主机： 1.可以直接用自己的ip来打开自己的网站。 2.每个站点是独立的ip，完全属于自己的网站使用。 3.如果一台服务器上的其他某个虚拟主机站点收到别人的攻击，那么自己的网站不受影响。 4.如果服务器上的某个虚拟主机站点存放了违法信息，假如网监封了这个站点的ip，您的站点也不受影响 5.提升用户网站被搜索引擎收录级别与机会。如果一个IP只对应一个网站，则搜索引擎会评定该网站质量高从而提高收录级别 6.可以实现泛域名绑定（无限域名绑定空间）。单独IP后可以实现以往Windows虚机实现不了的泛域名绑定功能。
+
+
+
+
+mongodb部分
+××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××
+
 # Linux安装MongoDB 参照 https://www.cnblogs.com/brucetang/p/5965493.html
 	
 	第一步 下载
@@ -550,10 +560,104 @@ server {
 # mongodb配置文件参数设置
 	https://www.jianshu.com/p/f9f1454f251f
 
-# 关于虚拟主机和虚拟服务器的区别：
-	参考网站：https://zhidao.baidu.com/question/518640025224832685.html
-	独立ip的有什么优势呢？ 非独立ip的虚拟主机： 1.共享ip主机不能用ip直接打开您的网站。 2.ip是共享的，一个服务器分很多虚拟主机，也就是说很多网站同用一个ip 3.如果收到黑客攻击，那么整个服务器上同ip的网站都受到影响 4.如果这个服务器上某些虚拟主机站点存放了违法信息，被网监查到了，那么就会封ip（现在网络查的都比较严格），那么您的站点也同时受到影响 5.搜索引擎收录，如果因为这个服务器上的某个站点因为作弊，或者违反了搜索引擎收录规则，或者有违法信息等，就有可能被搜索引擎降低权重，那么排名就会靠后了，同时就有可能影响整台服务器上的站点排名。 6.绑定域名有限制，虚拟主机绑定域名是有限制的，并且解析了域名还需要在虚拟主机管理那里进行域名绑定，这样才能访问网站。 独立ip的虚拟主机： 1.可以直接用自己的ip来打开自己的网站。 2.每个站点是独立的ip，完全属于自己的网站使用。 3.如果一台服务器上的其他某个虚拟主机站点收到别人的攻击，那么自己的网站不受影响。 4.如果服务器上的某个虚拟主机站点存放了违法信息，假如网监封了这个站点的ip，您的站点也不受影响 5.提升用户网站被搜索引擎收录级别与机会。如果一个IP只对应一个网站，则搜索引擎会评定该网站质量高从而提高收录级别 6.可以实现泛域名绑定（无限域名绑定空间）。单独IP后可以实现以往Windows虚机实现不了的泛域名绑定功能。
 
+
+# 我现在遇到一个问题 如何把阿里云的数据库导出去 如果用git导出 不是不可以 但是数据库文件很大 git导出会很不方便
+
+# MongoDB导入导出以及数据库备份
+https://www.cnblogs.com/qingtianyu2015/p/5968400.html
+例如我的database为
+runjie 
+集合有：
+aboutus
+case
+certification
+news
+service
+
+// 导出
+sudo mongoexport -d runjie -c aboutus -o /mongodb/aboutus.json --type json 
+
+sudo mongoexport -d runjie -c users -o /home/python/Desktop/mongoDB/users.json --type json -f  "_id,user_id,user_name,age,status"
+
+
+语法：
+	mongoexport -d dbname -c collectionname -o file --type json/csv -f field
+	参数说明：
+	    -d ：数据库名
+	    -c ：collection名
+	    -o ：输出的文件名
+	    --type ： 输出的格式，默认为json
+	    -f ：输出的字段，如果-type为csv，则需要加上-f "字段名"
+
+遇到问题：授权问题
+http://blog.csdn.net/lewistian/article/details/76693349?%3E
+
+mongoexport -authenticationDatabase runjie -h localhost -p 27017 -u runjieAdmin -p 528528 -d runjie -c aboutus -o /mongodb/aboutus.json --type json
+
+#
+#
+#
+
+#
+#
+#
+#
+#
+
+#
+#
+#
+#
+#
+
+#
+#
+#
+#
+#
+
+#
+#
+#
+#
+#
+
+#
+#
+#
+#
+#
+
+#
+#
+#
+#
+#
+
+#
+#
+#
+#
+#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+git部分
 ××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××
 # git问题汇总
 # git的编译安装最新版本方法
@@ -631,7 +735,7 @@ server {
 
 
 # 需求1 (仅供参考 不是最佳实践)
-本地建了一个仓库 有文件a 需要上传到github上
+	本地建了一个仓库 有文件a 需要上传到github上
  第一步 在本地文件夹根目录 初始化git仓库 git init
 
  第二步 本地仓库添加git源 git remote add origin git@github.com:wangabeng/aliyundata.git  此时 查看git源 git remote -v origin git@github.com:wangabeng/aliyundata.git (fetch) origin git@github.com:wangabeng/aliyundata.git (push)
@@ -648,7 +752,7 @@ server {
 
  成功
 
-# git需求 最佳实践
+# git需求 [最佳实践] 
 	远程仓库已经创建好 本地只有一个空目录 如何把远程代码下载到本地
 	https://www.douban.com/note/622560328/
 	1 进入本地目录
