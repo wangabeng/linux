@@ -182,6 +182,9 @@ server {
 	第一步： run puttygen生成公钥代码和私钥文件。
 	第二步： 保存私钥文件到本地，打开putty客户端（非命令行），载入私钥文件。
 	第三步： 拷贝公钥代码，putty登录到远程服务器， 打开 ~/.ssh/authorized_keys，把代码复制到此文件中即可。
+
+	如果设置了免密码登录 仍然登录不了 是因为authorized_keys的权限不够 必须设置为600 权限大了或小了 都不可以
+
 # centos新建用户 并设置密码
 	进入 /home目录
 	useradd newusername //新增用户名 userdel username 删除帐户名
@@ -418,6 +421,16 @@ server {
 	ps aux | grep mongod // 查看所有的mongod进程 
 	kill -2 PID // 杀死特定pid的进程 -1是查看 -2和-15都会等mongodb处理完事情释放相应资源后再停止。 -9是马上停止进程 比较暴力，不要使用，否则很可能导致数据损坏.
 
+	2018年1月28日杀死mongodb进程 用以上方法出现的问题：
+		每次pid值都不一样 无法杀死
+	http://blog.itpub.net/15498/viewspace-2122582/
+	参照这个介绍：
+	 ps -ef | grep mongod | grep -v grep
+	 // root       954     1  0 Jan20 ?        00:56:28 mongod --config /etc/mongod.conf
+	 sudo kill -2 954 // 成功
+
+
+
 	7、mongodb启动相关问题
 	如果出现这样的提示
 	ERROR: child process failed, exited with error number 100
@@ -491,7 +504,7 @@ server {
 	                }
 	        ]
 	}
-	第二步： 然后重新启动数据库 加上auth参数
+	第二步： 然后重新启动数据库 加上auth参数（如果通过配置文件启动 可以在配置文件里添加这个选项）
 	sudo mongod --dbpath=/mongodb/data --logpath=/mongodb/logs/mongod.log --logappend --port=27017 --auth &  
 	此时 如果用默认账号登录 
 	mongo
@@ -507,11 +520,18 @@ server {
 
 	然后创建特定数据库的管理员
 	use test
-	db.createUser({user: "myTester", pwd: "xyz123", roles: [{role: "readWrite", db: "test"}, {role: "read", db: "reporting"}]})
+	db.createUser({user: "myTester", pwd: "xyz123", roles: [{role: "readWrite", db: "test"}, {role: "read", db: "reporting"}]}) // 未创建
+
+	db.createUser({user: "runjieAdmin", pwd: "528528", roles: [{role: "readWrite", db: "runjie"}]}) // 已经创建
+
 	使用普通用户账号登陆
 	mongo --port27017
 	use test
 	db.auth("myTester","xyz123")
+ 
+	mongo -u runjieAdmin -p 528528 --authenticationDatabase 'runjie' //
+	db.auth("runjieAdmin","528528")
+
 	向数据集中添加纪录
 	db.foo.insert({x:1, y:1})
 
@@ -521,15 +541,76 @@ server {
 	show users
 	删除用户 (需要管理员权限)
 	db.dropUser('mytest')
-#
-#
-#
-#
+
+	# 出现的问题：
+	使用用户认证登录后 无法删除数据库 暂时的解决办法是 非用户授权登录 删除 数据库 然后再用户授权登录
+
+	# mongodb数据库导出导入
+
+# mongodb配置文件参数设置
+	https://www.jianshu.com/p/f9f1454f251f
+
+# 关于虚拟主机和虚拟服务器的区别：
+	参考网站：https://zhidao.baidu.com/question/518640025224832685.html
+	独立ip的有什么优势呢？ 非独立ip的虚拟主机： 1.共享ip主机不能用ip直接打开您的网站。 2.ip是共享的，一个服务器分很多虚拟主机，也就是说很多网站同用一个ip 3.如果收到黑客攻击，那么整个服务器上同ip的网站都受到影响 4.如果这个服务器上某些虚拟主机站点存放了违法信息，被网监查到了，那么就会封ip（现在网络查的都比较严格），那么您的站点也同时受到影响 5.搜索引擎收录，如果因为这个服务器上的某个站点因为作弊，或者违反了搜索引擎收录规则，或者有违法信息等，就有可能被搜索引擎降低权重，那么排名就会靠后了，同时就有可能影响整台服务器上的站点排名。 6.绑定域名有限制，虚拟主机绑定域名是有限制的，并且解析了域名还需要在虚拟主机管理那里进行域名绑定，这样才能访问网站。 独立ip的虚拟主机： 1.可以直接用自己的ip来打开自己的网站。 2.每个站点是独立的ip，完全属于自己的网站使用。 3.如果一台服务器上的其他某个虚拟主机站点收到别人的攻击，那么自己的网站不受影响。 4.如果服务器上的某个虚拟主机站点存放了违法信息，假如网监封了这个站点的ip，您的站点也不受影响 5.提升用户网站被搜索引擎收录级别与机会。如果一个IP只对应一个网站，则搜索引擎会评定该网站质量高从而提高收录级别 6.可以实现泛域名绑定（无限域名绑定空间）。单独IP后可以实现以往Windows虚机实现不了的泛域名绑定功能。
+
+# git的编译安装最新版本方法
+	我购买的阿里云yum安装的git 竟然是很低的版本1.8.1的
+	卸载重新安装步骤 参见https://www.cnblogs.com/oufeng/p/6614042.html
+
+		--安装gcc
+		sudo yum install gcc
+
+		--安装g++
+		sudo yum install gcc-c++
+
+		--安装编译所需的包
+		sudo yum install curl-devel expat-devel gettext-devel openssl-devel zlib-devel
+		sudo yum install gcc perl-ExtUtils-MakeMaker
+		复制代码
+		下载源码(*.tar.gz)到指定的目录
+
+		--下载文件到/usr/src/git-2.12.2目录
+		wget -P ~/src/git-2.12.2 https://www.kernel.org/pub/software/scm/git/git-2.12.2.tar.gz
+		切换到刚刚保存下载文件的目录并解压文件
+
+		--切换到指定目录
+		cd /usr/src/git-2.12.2/
+
+		--解压源码包
+		tar zxvf git-2.12.2.tar.gz
+		进入解压目录
+
+		cd git-2.12.2/
+		配置安装目录并编译和安装
+		./configure 是待编译文件的路径
+		--prefix=/usr/local/git-2.12.2意思是设置这个程序编译后的安装的路径 你编译后的程序会放在/usr/local/git-2.12.2目录下
+		sudo ./configure --prefix=/usr/local/git-2.12.2 && sudo make install
+
+		编译安装完成后 新的版本会自动添加到环境变量中
+
+# git push的权限问题 虽然我更新了git的最新版本 但是每到git push的时候 	还是会出现权限的问题 
+	提示信息如下：
+	Permission denied (publickey).
+	fatal: Could not read from remote repository.
+
+	解决方法：
+	https://www.phpsong.com/1860.html
+
+	git config --global push.default simple // 成功 即把git push的默认模式改为simple模式 何为simple模式：
+
+	在中央仓库工作流程模式下，拒绝推送到上游与本地分支名字不同的分支。也就是只有本地分支名和上游分支名字一致才可以推送，就算是推送到不是拉取数据的远程仓库，只要名字相同也是可以的。在GIT 2.0中，simple将会是push.default的默认值。simple只会推送本地当前分支。
+
+	备注：如果不设置 在第一次推送的时候 设置好推送的分支 应该也可以
+	git push -u origin master
+
+
+
+
+
 #
 #
 #
 #
 #
 
-
-mongo -u 'imooc' -p 'imooc' --authenticationDatabase 'admin'
