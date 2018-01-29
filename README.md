@@ -554,6 +554,8 @@ server {
 	参考网站：https://zhidao.baidu.com/question/518640025224832685.html
 	独立ip的有什么优势呢？ 非独立ip的虚拟主机： 1.共享ip主机不能用ip直接打开您的网站。 2.ip是共享的，一个服务器分很多虚拟主机，也就是说很多网站同用一个ip 3.如果收到黑客攻击，那么整个服务器上同ip的网站都受到影响 4.如果这个服务器上某些虚拟主机站点存放了违法信息，被网监查到了，那么就会封ip（现在网络查的都比较严格），那么您的站点也同时受到影响 5.搜索引擎收录，如果因为这个服务器上的某个站点因为作弊，或者违反了搜索引擎收录规则，或者有违法信息等，就有可能被搜索引擎降低权重，那么排名就会靠后了，同时就有可能影响整台服务器上的站点排名。 6.绑定域名有限制，虚拟主机绑定域名是有限制的，并且解析了域名还需要在虚拟主机管理那里进行域名绑定，这样才能访问网站。 独立ip的虚拟主机： 1.可以直接用自己的ip来打开自己的网站。 2.每个站点是独立的ip，完全属于自己的网站使用。 3.如果一台服务器上的其他某个虚拟主机站点收到别人的攻击，那么自己的网站不受影响。 4.如果服务器上的某个虚拟主机站点存放了违法信息，假如网监封了这个站点的ip，您的站点也不受影响 5.提升用户网站被搜索引擎收录级别与机会。如果一个IP只对应一个网站，则搜索引擎会评定该网站质量高从而提高收录级别 6.可以实现泛域名绑定（无限域名绑定空间）。单独IP后可以实现以往Windows虚机实现不了的泛域名绑定功能。
 
+××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××
+# git问题汇总
 # git的编译安装最新版本方法
 	我购买的阿里云yum安装的git 竟然是很低的版本1.8.1的
 	卸载重新安装步骤 参见https://www.cnblogs.com/oufeng/p/6614042.html
@@ -589,6 +591,7 @@ server {
 
 		编译安装完成后 新的版本会自动添加到环境变量中
 
+
 # git push的权限问题 虽然我更新了git的最新版本 但是每到git push的时候 	还是会出现权限的问题 
 	提示信息如下：
 	Permission denied (publickey).
@@ -602,15 +605,89 @@ server {
 	在中央仓库工作流程模式下，拒绝推送到上游与本地分支名字不同的分支。也就是只有本地分支名和上游分支名字一致才可以推送，就算是推送到不是拉取数据的远程仓库，只要名字相同也是可以的。在GIT 2.0中，simple将会是push.default的默认值。simple只会推送本地当前分支。
 
 	备注：如果不设置 在第一次推送的时候 设置好推送的分支 应该也可以
-	git push -u origin master
+	git push -u origin master 
+
+	在git push的时候不需要sudo权限
+
+# 遇到的问题 在本地删除了几个文件后 
+	git add . // 出现错误提示
+	* 'git add --all <pathspec>' will let you also record the removals.
+
+	Run 'git status' to check the paths you removed from your working tree.
+	
+	// 于是执行
+	git add --all  // 成功解决
 
 
+# 需求1 本地建了一个仓库 有文件a 需要上传到github上
+ 第一步 在本地文件夹根目录 初始化git仓库 git init
 
+ 第二步 本地仓库添加git源 git remote add origin git@github.com:wangabeng/aliyundata.git  此时 查看git源 git remote -v origin git@github.com:wangabeng/aliyundata.git (fetch) origin git@github.com:wangabeng/aliyundata.git (push)
 
+ 第三步 把本地代码提交到暂存区 工作区  git add . git commit -m 'add'
+
+ 第四步 合并当前分支到远程master分支 git fetch origin master  此时会报错 因为本地没有工作流记录 fatal: refusing to merge unrelated histories  所以要添加参数 --allow-unrelated-histories git fetch origin master --allow-unrelated-histories
+
+ 第五步 git push -u origin master  提交到远程仓库的master分支 -u设置默认提交的主机名（origin） 分支名（master）
+
+ 成功
 
 #
 #
 #
 #
 #
+#
+#
+#
+
+#
+#
+#
+#
+#
+
+#
+#
+#
+#
+#
+
+#
+#
+#
+#
+#
+
+#
+#
+#
+#
+#
+
+#
+#
+#
+#
+#
+
+#
+#
+#
+#
+#
+
+#
+#
+#
+#
+#
+
+#
+#
+#
+#
+#
+
+
 
