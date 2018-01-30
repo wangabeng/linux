@@ -272,6 +272,45 @@ server {
 	参考网站：https://zhidao.baidu.com/question/518640025224832685.html
 	独立ip的有什么优势呢？ 非独立ip的虚拟主机： 1.共享ip主机不能用ip直接打开您的网站。 2.ip是共享的，一个服务器分很多虚拟主机，也就是说很多网站同用一个ip 3.如果收到黑客攻击，那么整个服务器上同ip的网站都受到影响 4.如果这个服务器上某些虚拟主机站点存放了违法信息，被网监查到了，那么就会封ip（现在网络查的都比较严格），那么您的站点也同时受到影响 5.搜索引擎收录，如果因为这个服务器上的某个站点因为作弊，或者违反了搜索引擎收录规则，或者有违法信息等，就有可能被搜索引擎降低权重，那么排名就会靠后了，同时就有可能影响整台服务器上的站点排名。 6.绑定域名有限制，虚拟主机绑定域名是有限制的，并且解析了域名还需要在虚拟主机管理那里进行域名绑定，这样才能访问网站。 独立ip的虚拟主机： 1.可以直接用自己的ip来打开自己的网站。 2.每个站点是独立的ip，完全属于自己的网站使用。 3.如果一台服务器上的其他某个虚拟主机站点收到别人的攻击，那么自己的网站不受影响。 4.如果服务器上的某个虚拟主机站点存放了违法信息，假如网监封了这个站点的ip，您的站点也不受影响 5.提升用户网站被搜索引擎收录级别与机会。如果一个IP只对应一个网站，则搜索引擎会评定该网站质量高从而提高收录级别 6.可以实现泛域名绑定（无限域名绑定空间）。单独IP后可以实现以往Windows虚机实现不了的泛域名绑定功能。
 
+# CentOS查看和修改PATH环境变量的方法
+	参考： http://blog.csdn.net/boolbo/article/details/52437760
+
+	查看PATH：echo $PATH
+	以添加mongodb server为列
+	修改方法一：
+	export PATH=/usr/local/mongodb/bin:$PATH
+	//配置完后可以通过echo $PATH查看配置结果。
+	生效方法：立即生效
+	有效期限：临时改变，只能在当前的终端窗口中有效，当前窗口关闭后就会恢复原有的path配置
+	用户局限：仅对当前用户
+	 
+	修改方法二：
+	通过修改.bashrc文件:
+	vim ~/.bashrc 
+	//在最后一行添上：
+	export PATH=/usr/local/mongodb/bin:$PATH
+	生效方法：（有以下两种）
+	1、关闭当前终端窗口，重新打开一个新终端窗口就能生效
+	2、输入“source ~/.bashrc”命令，立即生效
+	有效期限：永久有效
+	用户局限：仅对当前用户
+
+	修改方法三:
+	通过修改profile文件:
+	vim /etc/profile
+	/export PATH //找到设置PATH的行，添加
+	export PATH=/usr/local/mongodb/bin:$PATH
+	生效方法：系统重启
+	有效期限：永久有效
+	用户局限：对所有用户
+
+	修改方法四:
+	通过修改environment文件:
+	vim /etc/environment
+	在PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"中加入“:/usr/local/mongodb/bin”
+	生效方法：系统重启
+	有效期限：永久有效
+	用户局限：对所有用户
 
 
 
@@ -447,45 +486,7 @@ mongodb部分
 
 	解决办法  删除/var/lib/mongo/下的   mongod.lock 然后重启
 
-# CentOS查看和修改PATH环境变量的方法
-	参考： http://blog.csdn.net/boolbo/article/details/52437760
-
-	查看PATH：echo $PATH
-	以添加mongodb server为列
-	修改方法一：
-	export PATH=/usr/local/mongodb/bin:$PATH
-	//配置完后可以通过echo $PATH查看配置结果。
-	生效方法：立即生效
-	有效期限：临时改变，只能在当前的终端窗口中有效，当前窗口关闭后就会恢复原有的path配置
-	用户局限：仅对当前用户
-	 
-	修改方法二：
-	通过修改.bashrc文件:
-	vim ~/.bashrc 
-	//在最后一行添上：
-	export PATH=/usr/local/mongodb/bin:$PATH
-	生效方法：（有以下两种）
-	1、关闭当前终端窗口，重新打开一个新终端窗口就能生效
-	2、输入“source ~/.bashrc”命令，立即生效
-	有效期限：永久有效
-	用户局限：仅对当前用户
-
-	修改方法三:
-	通过修改profile文件:
-	vim /etc/profile
-	/export PATH //找到设置PATH的行，添加
-	export PATH=/usr/local/mongodb/bin:$PATH
-	生效方法：系统重启
-	有效期限：永久有效
-	用户局限：对所有用户
-
-	修改方法四:
-	通过修改environment文件:
-	vim /etc/environment
-	在PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"中加入“:/usr/local/mongodb/bin”
-	生效方法：系统重启
-	有效期限：永久有效
-	用户局限：对所有用户	
+	
 
 # Mongodb专项学习(参考：https://www.jianshu.com/p/75ba25415218)
 	1 开启权限认证 增强安全性
@@ -565,37 +566,59 @@ mongodb部分
 # 我现在遇到一个问题 如何把阿里云的数据库导出去 如果用git导出 不是不可以 但是数据库文件很大 git导出会很不方便
 
 # MongoDB导入导出以及数据库备份
-https://www.cnblogs.com/qingtianyu2015/p/5968400.html
-例如我的database为
-runjie 
-集合有：
-aboutus
-case
-certification
-news
-service
+	https://www.cnblogs.com/qingtianyu2015/p/5968400.html
+	例如我的database为
+	runjie 
+	集合有：
+	aboutus
+	case
+	certification
+	news
+	service
 
-// 导出
-sudo mongoexport -d runjie -c aboutus -o /mongodb/aboutus.json --type json 
+	// 导出
+	sudo mongoexport -d runjie -c aboutus -o /mongodb/aboutus.json --type json 
+	例如：
+	sudo mongoexport -d runjie -c users -o /home/python/Desktop/mongoDB/users.json --type json -f  "_id,user_id,user_name,age,status"
 
-sudo mongoexport -d runjie -c users -o /home/python/Desktop/mongoDB/users.json --type json -f  "_id,user_id,user_name,age,status"
 
+	语法：
+		mongoexport -d dbname -c collectionname -o file --type json/csv -f field
+		参数说明：
+		    -d ：数据库名
+		    -c ：collection名
+		    -o ：输出的文件名
+		    --type ： 输出的格式，默认为json
+		    -f ：输出的字段，如果-type为csv，则需要加上-f "字段名"
 
-语法：
-	mongoexport -d dbname -c collectionname -o file --type json/csv -f field
-	参数说明：
-	    -d ：数据库名
-	    -c ：collection名
-	    -o ：输出的文件名
-	    --type ： 输出的格式，默认为json
-	    -f ：输出的字段，如果-type为csv，则需要加上-f "字段名"
+	遇到问题：授权问题
+	http://blog.csdn.net/lewistian/article/details/76693349?%3E
 
-遇到问题：授权问题
-http://blog.csdn.net/lewistian/article/details/76693349?%3E
+	// 导出成功 ( 127.0.0.1 如果换成公网IP就不成功 )
+	sudo mongoexport -h 127.0.0.1 -p 27017 -u runjieAdmin -p 528528 -d runjie -c aboutus -o /mongodb/aboutus.json --type json
 
-mongoexport -authenticationDatabase runjie -h localhost -p 27017 -u runjieAdmin -p 528528 -d runjie -c aboutus -o /mongodb/aboutus.json --type json
+	// 数据导入 linux中导入成功
+	sudo mongoimport -h 127.0.0.1 -p 27017 -u runjieAdmin -p 528528 -d runjie -c users --file /mongodb/aboutus.json --type json
 
-#
+	// window中导入成功
+	mongoimport -h 127.0.0.1 -p 27017 -d runjie -c aboutus --file d:/aliyundata/aboutus.json --type json
+
+	// 数据库之间导入导出
+	mongoexport -h 47.104.182.26 -p 27017 -u runjieAdmin -p 528528 -d runjie -c aboutus -o d:/aboutus.json --type json
+
+# node连接数据库mongodb
+	使用 mongodb 遇到的db.collection is not a function 的问题 
+	http://blog.csdn.net/qq_36370731/article/details/78963078
+	解决办法：
+	把mongodb改回以前的版本 我以前用的版本是2.2.29 然后重新安装 就成功了
+
+	关于mongodb授权登录远程数据库的问题
+	如果服务器不开启用户认证模式
+	var url = "mongodb://47.104.182.26:27017/runjie"; // 就可以直接连接数据库
+	
+	如果服务器开启用户验证 则必须在连接的时候键入数据库密码方可登录
+	var url = "mongodb://runjieAdmin:pass**word@47.104.182.26:27017/runjie"
+
 #
 #
 
