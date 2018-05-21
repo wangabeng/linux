@@ -146,7 +146,7 @@ server {
 
 # 阿里云远程登录相关配置
 	远程登录分配PD：230884
-	login pd： Name bir
+	login pd： Name bir（注意 N大写）
 	百度站长：Name bir
 	公网IP： 47.104.182.26
 	内网：172.31.241.139
