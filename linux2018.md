@@ -163,3 +163,7 @@ systemctl status php-fpm.service
 
 在浏览器打开192.168.44.129：80/index.php 
 看到 hello eric 就大功告成~
+
+
+# 参考2
+https://my.oschina.net/u/873934/blog/597319
