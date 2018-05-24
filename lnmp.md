@@ -1,6 +1,6 @@
 
 # 参考地址： https://blog.csdn.net/wszll_alex/article/details/76285324
-Centos 7.3搭建LNMP环境
+# Centos 7.3搭建LNMP环境
 
 
 1. 关闭防火墙和selinux
@@ -170,6 +170,7 @@ https://my.oschina.net/u/873934/blog/597319
 
 # 配置很久 都不成功 基本判断是文件权限的问题
 --------------------------
+```
 server {
   listen    80;
   server_name phptest.benkid.cn;
@@ -185,8 +186,9 @@ server {
     include    fastcgi_params;
   }
 }
-
+```
 -----------------------
+```
 sudo vim /etc/nginx/nginx.conf
 sudo vim /etc/nginx/conf.d/default.conf
 sudo vim /data/www/testphp/index.php
@@ -198,3 +200,4 @@ access_log  /var/log/nginx/access.log  main;
 sudo rm /etc/nginx/conf.d/default.conf
 
 172.31.241.139 phptest.benkid.cn
+```
