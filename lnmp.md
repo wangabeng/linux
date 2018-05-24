@@ -157,7 +157,7 @@ https://my.oschina.net/u/873934/blog/597319
 
 # 配置很久 都不成功 基本判断是文件权限的问题
 --------------------------
-
+```
 server {
   listen    80;
   server_name phptest.benkid.cn;
