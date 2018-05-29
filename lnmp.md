@@ -188,3 +188,21 @@ sudo rm /etc/nginx/conf.d/default.conf
 
 172.31.241.139 phptest.benkid.cn
 ```
+# 安装lnmp后命令行mysql 报错：
+ERROR 1045 (28000): Access denied for user 'abeng'@'localhost' (using password: YES)
+```
+解决办法:
+这种问题需要强行重新修改密码，方法如下：
+
+/etc/init.d/mysql stop   (service mysqld stop )
+/usr/bin/mysqld_safe --skip-grant-tables
+另外开个SSH连接
+[root@localhost ~]# mysql
+mysql>use mysql
+mysql>update user set password=password("123456") where user="root";
+mysql>flush privileges;
+mysql>exit
+
+pkill -KILL -t pts/0 可将pts为0的**用户(之前运行mysqld_safe的用户窗口)强制踢出
+正常启动 MySQL：/etc/init.d/mysql start   (service mysqld start)
+```
