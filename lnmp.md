@@ -206,3 +206,94 @@ mysql>exit
 pkill -KILL -t pts/0 可将pts为0的**用户(之前运行mysqld_safe的用户窗口)强制踢出
 正常启动 MySQL：/etc/init.d/mysql start   (service mysqld start)
 ```
+
+# 一些linux操作mysql的常见命令
+```
+1 查看当前用户
+mysql
+mysql> status   或者  select user();
+2 创建用户
+CREATE USER  'user_name'@'host'  IDENTIFIED BY  'password'；
+user_name：要创建用户的名字。
+
+host：表示要这个新创建的用户允许从哪台机登陆，如果只允许从本机登陆，则 填　‘localhost’ ，如果允许从远程登陆，则填 ‘%’
+
+password：新创建用户的登陆数据库密码，如果没密码可以不写。
+
+例：
+
+CREATE USER  ‘aaa’@‘localhost’ IDENTIFED BY ‘123456’；          //表示创建的新用户，名为aaa，这个新用户密码为123456，只允许本机登陆
+
+CREATE USER  'bbb'@'%' IDENTIFED BY '123456'；//表示新创建的用户，名为bbb，这个用户密码为123456，可以从其他电脑远程登陆mysql所在服务器
+
+CREATE USER  ‘ccc’@‘%’ ；//表示新创建的用户ccc，没有密码，可以从其他电脑远程登陆mysql服务器
+
+我用 CREATE USER  'aaa'@‘%’；创建新用户，再用 select * from user；查看用户列表
+
+3.授权用户
+
+命令：GRANT privileges ON  databasename.tablename  TO  ‘username’@‘host’
+
+privileges：表示要授予什么权力，例如可以有 select ， insert ，delete，update等，如果要授予全部权力，则填 ALL
+
+databasename.tablename：表示用户的权限能用在哪个库的哪个表中，如果想要用户的权限很作用于所有的数据库所有的表，则填 *.*，*是一个通配符，表示全部。
+
+’username‘@‘host’：表示授权给哪个用户。
+
+
+
+例：
+
+GRANT  select，insert  ON  zje.zje  TO ‘aaa’@‘%’；         //表示给用户aaa授权，让aaa能给zje库中的zje表 实行 insert 和 select。
+
+GRANT  ALL  ON  *.*  TO  ‘aaa’@‘%’；//表示给用户aaa授权，让aaa能给所有库所有表实行所有的权力。
+
+
+用GRANT  ALL  ON  *.*  TO  ‘aaa’@‘%’ ；再看用户列表，可以发现权限都变成 Y了。
+
+注意：
+
+用以上命令授权的用户不能给其他用户授权，如果想这个用户能够给其他用户授权，就要在后面加上   WITH GRANT OPTION
+
+如： GRANT  ALL  ON   *.*   TO  ’aaa‘@'%'  WITH GRANT OPTION； 
+
+4.删除用户
+
+命令：DROP  USER ‘user_name’@‘host’ 
+
+例：
+
+DROP USER 'aaa'@‘%’；//表示删除用户aaa；
+
+
+
+5.设置与更改用户密码
+
+SET  PASSWORD  FOR  ‘username’@‘host’ = PASSWORD(‘newpassword’)； 
+
+如果是设置当前用户的密码：
+
+SET  PASSWORD = PASSWORD('newpassword')；
+
+如： SET  PASSWORD = PASSWORD(‘123456’)；
+
+
+6.撤销用户权限：
+
+命令：REVOKE   privileges   ON  database.tablename  FROM  ‘username’@‘host’；
+
+例如： REVOKE  SELECT ON  *.*  FROM  ‘zje’@‘%’；
+
+
+
+但注意：
+
+若授予权利是这样写： GRANT  SELECT  ON  *.*  TO ‘zje’@‘%’；
+
+则用 REVOKE  SELECT ON   zje.aaa  TO  ‘zje’@‘%’；是不能撤销用户zje 对 zje.aaa 中的SELECT 权利的。
+
+
+反过来 GRANT SELECT  ON  zje.aaa  TO  ‘zje’@‘%’；授予权力
+
+用 REVOKE SELECT ON  *.*  FROM  ‘zje’@‘%’；也是不能用来撤销用户zje 对zje库的aaa表的SELECT 权利的
+```
