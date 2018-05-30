@@ -4,18 +4,22 @@
 mysql -uroot -p
 输入空（默认密码为空 版本5.6.40 ）
 ```
+
 ## 查看所有数据库
 ```
 SHOW DATABASES;
 ```
+
 ## 创建数据库[if not exists]可选
 ```
 CREATE DATABASE IF NOT EXISTS bookstore;
 ```
+
 ## 删除数据库
 ```
 DROP DATABASE IF EXISTS bookstore;
 ```
+
 ## 创建数据表
 切换到数据库 然后创建表
 auto_increment必须设置为主键
@@ -27,11 +31,33 @@ CREAT TABLE IF NOT EXISTS book(
     PRIMARY KEY(id)
 );
 ```
+
 ## 查看数据表
 ```
 SHOW TABLES;
 ```
+
 ## 查看数据表详情
 ```
 DESC book;
++----------+-------------+------+-----+---------+----------------+
+| Field    | Type        | Null | Key | Default | Extra          |
++----------+-------------+------+-----+---------+----------------+
+| id       | int(11)     | NO   | PRI | NULL    | auto_increment |
+| bookname | varchar(50) | NO   |     |         |                |
++----------+-------------+------+-----+---------+----------------+
 ```
+
+## 更改数据表结构或字段名称 类型等
+```
+ALTER TABLE book CHANGE bookname booksname VARCHAR(100);
+```
+
+## 删除数据表
+```
+DROP TABLE book;
+```
+
+## 数据表内容管理
+## 向mysql数据表插入行记录
+
