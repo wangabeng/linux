@@ -53,11 +53,41 @@ DESC book;
 ALTER TABLE book CHANGE bookname booksname VARCHAR(100);
 ```
 
+## 更改数据表字符集（解决不能插入中文字符的问题）
+ALTER TABLE book CONVERT TO CHARACTER SET utf8;
+
 ## 删除数据表
 ```
 DROP TABLE book;
 ```
 
 ## 数据表内容管理
-## 向mysql数据表插入行记录
+## 向mysql数据表插入行记录（增）
+```
+INSERT INTO book(id, booksname) values(100, 'javascript高程');
+```
 
+## 在mysql数据表里查询记录（查）
+```
+SELECT id, booksname FROM book;
++-----+------------------+
+| id  | booksname        |
++-----+------------------+
+| 123 | javascript       |
+| 456 | javascript高程   |
++-----+------------------+
+2 rows in set (0.00 sec)
+```
+## 更改数据表中的记录(where是查询)
+```
+UPDATE book SET id=100 WHERE id=123;
+```
+## 删除表中的记录
+```
+DELETE FROM book WHERE id=100;
+```
+
+## 
+```
+
+```
