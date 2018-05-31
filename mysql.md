@@ -1,4 +1,4 @@
-#mysql相关操作
+# mysql相关操作
 ## 登录：
 ```
 mysql -uroot -p
