@@ -87,7 +87,7 @@ UPDATE book SET id=100 WHERE id=123;
 DELETE FROM book WHERE id=100;
 ```
 
-## 
+# php操作mysql 通过mysqli连接数据库 
 ```
-
+https://www.cnblogs.com/qiutianjia/p/5582632.html
 ```
