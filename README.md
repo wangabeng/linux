@@ -191,12 +191,15 @@ server {
 	passwd newusername // 设置密码
 	
 # 提权操作
+```
 	1 在abeng下操作vim 提示没有权限
 	2 需要在root账号下授权
 	进入root账户
 	visudo // 找到/wheel 
-	%wheel  ALL=(ALL)       ALL // 在下面添加一行 即可在abeng下操作 sudo vim filename
-	%wheel  abeng=(ALL)       ALL
+	## Allow root to run any commands anywhere
+	root    ALL=(ALL)       ALL // 在下面添加一行 即可在abeng下操作 sudo vim filename
+	abeng=(ALL)       ALL
+```	
 # 防火墙安装 等命令 参照 https://www.cnblogs.com/lambertwe/p/7352552.html
 	yum install firewalld //安装
 	service firewalld start // 开启
