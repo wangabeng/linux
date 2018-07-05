@@ -234,13 +234,14 @@ server {
 	firewall-cmd --list-all
 
 # centos安装nvm及node 参照 https://www.jianshu.com/p/f97b436da0ba
+```
 	一 下面使用nvm安装nodejs 然后提示重新启动shell工具
-	wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.30.1/install.sh | bash
+	wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.30.1/install.sh | bash 要重启终端
 	二 通过简单的命令来安装nodejs https://nodejs.org/zh-cn/
 	nvm install 8.9.4  // 安装node的稳定版本 参照官方推荐
 	三 nvm启用node
 	nvm use node // 或 nvm use v8.9.4
-
+```
 # 改变node的npm镜像源为cnpm
 	npm install -g cnpm --registry=https://registry.npm.taobao.org
 
