@@ -330,6 +330,12 @@ server {
 	有效期限：永久有效
 	用户局限：对所有用户
 
+## 使用PuTTY在Windows中向Linux上传文件
+1 进入putty安装目录
+C:\Program Files\PuTTY
+然后打开命令行工具输入
+ pscp d:\abc.txt abeng@116.62.240.193:/data/www
+ 即可把window的数据传送到linux上
 
 
 mongodb部分
