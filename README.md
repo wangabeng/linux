@@ -213,7 +213,8 @@ server {
 	## Allow root to run any commands anywhere
 	root    ALL=(ALL)       ALL // 在下面添加一行 即可在abeng下操作 sudo vim filename
 	abeng=(ALL)       ALL
-```	
+```
+
 # 防火墙安装 等命令 参照 https://www.cnblogs.com/lambertwe/p/7352552.html
 	yum install firewalld //安装
 	service firewalld start // 开启
@@ -334,11 +335,18 @@ server {
 1 进入putty安装目录
 C:\Program Files\PuTTY
 然后打开命令行工具输入
- pscp d:\abc.txt abeng@116.62.240.193:/data/www
+传文件, username@IP ADDRESS:/------
+```
+ pscp d:/abc.txt abeng@116.62.240.193:/data/www
+ ```
+ 传文件夹 加上参数-r 表示发送目录
+ ```
+pscp -r d:/test abeng@116.62.240.193:/data/www
+ ```
  即可把window的数据传送到linux上
 
 
-mongodb部分
+# mongodb部分
 ××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××××
 
 # Linux安装MongoDB 参照 https://www.cnblogs.com/brucetang/p/5965493.html
