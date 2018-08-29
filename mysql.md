@@ -91,3 +91,15 @@ DELETE FROM book WHERE id=100;
 ```
 https://www.cnblogs.com/qiutianjia/p/5582632.html
 ```
+
+## 解决mysql Navicat连接阿里云数据库 出错:1130-host . is not allowed to connect to this MySql server
+因为外部计算机没有得到mysql的授权，解决办法：
+例如，你想myuser使用mypassword从任何主机连接到mysql服务器的话。
+```
+GRANT ALL PRIVILEGES ON *.* TO 'myuser'@'%' IDENTIFIED BY 'mypassword' WITH GRANT OPTION;
+```
+以本人阿里云主机为例
+```
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '' WITH GRANT OPTION;
+```
+然后在在Navicat新建mysql连接 即可。
