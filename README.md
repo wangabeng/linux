@@ -344,8 +344,25 @@ C:\Program Files\PuTTY
 pscp -r d:/test abeng@116.62.240.193:/data/www
  ```
  即可把window的数据传送到linux上
+ 
+## 使用PuTTY在Windows中向Linux上传文件2
+1 进入putty安装目录  
+2 打开psftp.exe  
+3 进入linux相关文件夹
+4 执行上传 put上传 get下载
+```
+put something.txt
+get something.txt another.txt
+
+put -r /local/test
+get -r something
+```
+如果是上传文件夹 加上 -r
 
 # LINUX忘记普通用户密码 重新设置密码
 用超级用户登录，然后输入passwd username 然后重新设置即可
 
-
+# Linux配置java及maven环境
+```
+sudo yum -y install java-1.8.0-openjdk
+```
