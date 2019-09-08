@@ -364,5 +364,19 @@ get -r something
 
 # Linux配置java及maven环境
 ```
-sudo yum -y install java-1.8.0-openjdk
+yum search java | grep open // 搜索所有的java带open的安装文件
+sudo yum install java-1.8.0-openjdk*  // 执行安装
+java -version // 测试是否安装成功
 ```
+# 安装maven
+1 下载maven linux版本安装包  
+2 上传到linux
+3 解压文件  
+```
+tar -xzvf apache-maven-3.5.2
+```
+4 配置为全局环境变量
+```
+sudo ln -s ~/apache-maven-3.6.2/bin/mvn /usr/bin/mvn
+```
+5 随意文件目下下，输入mvn -version 可以测试是否安装成功
