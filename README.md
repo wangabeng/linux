@@ -358,6 +358,10 @@ put -r /local/test
 get -r something
 ```
 如果是上传文件夹 加上 -r
+例如：上传文件夹
+```
+put -r D:/www-XXX-com-80 /data/www/www-XXX-com-80
+```
 
 # LINUX忘记普通用户密码 重新设置密码
 用超级用户登录，然后输入passwd username 然后重新设置即可
