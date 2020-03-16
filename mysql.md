@@ -103,3 +103,33 @@ GRANT ALL PRIVILEGES ON *.* TO 'myuser'@'%' IDENTIFIED BY 'mypassword' WITH GRAN
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '' WITH GRANT OPTION;
 ```
 然后在在Navicat新建mysql连接 即可。
+
+
+# 重新设置mysql密码 非最佳实践
+set password for 'root'@'localhost' = password('528528');
+也可以这样设置：
+用root 进入mysql后
+mysql>set password =password('你的密码');
+mysql>flush privileges;
+
+遇到的问题：  
+在linux设置好root账户的mysql密码后，mynavicat仍然使用旧的密码，为什么？
+
+# 重新设置mysql密码 最佳实践
+https://blog.csdn.net/weixin_34221773/article/details/92434154
+```
+给用户设置密码后，无密码时可以登录，使用密码则不能登录。
+
+试着删除空用户，然后刷新权限表就可以了。
+
+mysql>delete from mysql.user where user='';
+
+mysql>flush privileges;
+
+所以从安全角度考虑，在Mysql安装好、启动后第一件事情就要设置密码，和删除空账户(切记)：
+mysql>update mysql.user set password=password('yourpassword') where user='root';
+mysql>delete from mysql.user where user='';
+mysql>flush privileges;
+
+转载于:https://my.oschina.net/yangphere/blog/103499
+```
